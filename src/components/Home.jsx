@@ -92,7 +92,10 @@ function Home() {
                   backdrop-blur-sm opacity-0 translate-y-8 cursor-pointer`}
                 onClick={(e) => {
                   e.preventDefault();
-                  alert(`Navigating to ${card.title} section`);
+                  // alert(`Navigating to ${card.title} section`);
+                    window.location.href = card.href;
+                  
+                  
                 }}
               >
                 {/* Card glow effect */}

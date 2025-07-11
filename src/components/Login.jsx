@@ -194,13 +194,7 @@ function Login() {
           </div>
         </form>
 
-        {/* Footer */}
-        <div className="mt-6 text-center text-gray-400 text-sm">
-          Forgot your password?{' '}
-          <button className="text-yellow-400 hover:text-yellow-300 underline transition-colors">
-            Reset here
-          </button>
-        </div>
+       
       </div>
     </div>
   );
