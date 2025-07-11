@@ -17,19 +17,7 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white">
-          <Navbar />
-          <div className="pt-24 pb-10 px-4 sm:px-6 lg:px-8">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/roommate" element={<PrivateRoute><RoommateFinder /></PrivateRoute>} />
-              <Route path="/study" element={<PrivateRoute><StudyGroupFormation /></PrivateRoute>} />
-              <Route path="/hackathon" element={<PrivateRoute><HackathonTeamBuilder /></PrivateRoute>} />
-              <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
-            </Routes>
-          </div>
-          <Footer />
+         <HackathonTeamBuilder />
         </div>
       </Router>
     </AuthProvider>

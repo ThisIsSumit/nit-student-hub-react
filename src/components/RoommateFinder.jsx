@@ -12,7 +12,7 @@ function RoommateFinder() {
 
   useEffect(() => {
     gsap.from(formRef.current.querySelectorAll('.form-input'), {
-      opacity: 0,
+      opacity: 1,
       y: 20,
       stagger: 0.1,
       duration: 0.5,
