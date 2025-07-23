@@ -1,28 +1,79 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import axios from 'axios';
 
 function Login() {
   const [formData, setFormData] = useState({ rollNo: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const formRef = useRef(null);
   const containerRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    setTimeout(() => {
-      if (formData.rollNo && formData.password) {
+    // Basic validation
+    if (!formData.rollNo || !formData.password) {
+      setError('Please fill in all fields');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Make API call to login endpoint
+      const response = await axios.post('/api/auth/login', {
+        rollNo: formData.rollNo,
+        password: formData.password,
+      });
+
+      // If login is successful
+      if (response.data.success) {
+        // Store auth token in localStorage
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
         setSuccess(true);
-        setIsLoading(false);
-      } else {
-        setError('Please fill in all fields');
-        setIsLoading(false);
+        
+        // Redirect to home after a short delay
+        setTimeout(() => {
+          navigate('/home');
+        }, 1500);
       }
-    }, 1500);
+    } catch (err) {
+      // Handle different types of errors
+      if (err.response?.status === 401) {
+        setError('Invalid roll number or password');
+      } else if (err.response?.status === 404) {
+        setError('User not found. Please register first.');
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Verify token is still valid
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      navigate('/home');
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -81,18 +132,20 @@ function Login() {
                 value={formData.rollNo}
                 onChange={(e) => setFormData({ ...formData, rollNo: e.target.value })}
                 className={inputClass(error)}
+                disabled={isLoading}
               />
               <span className="absolute left-3 top-3.5 text-gray-400">#</span>
             </div>
 
-            {/* Password */}
+            {/* Password with show/hide functionality */}
             <div className="form-group relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className={inputClass(error)}
+                className={`${inputClass(error)} pr-12`}
+                disabled={isLoading}
               />
               <svg
                 className="absolute left-3 top-3.5 w-5 h-5 text-gray-400"
@@ -107,6 +160,14 @@ function Login() {
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                 />
               </svg>
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-300 focus:outline-none transition-colors duration-200"
+                disabled={isLoading}
+              >
+                {showPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
+              </button>
             </div>
 
             {/* Error */}
@@ -148,7 +209,7 @@ function Login() {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  Login successful! Redirecting...
+                  Login successful! Redirecting to home...
                 </div>
               </div>
             )}
@@ -194,7 +255,17 @@ function Login() {
           </div>
         </form>
 
-       
+        {/* Register Link */}
+        <div className="mt-6 text-center text-gray-400">
+          Don't have an account?{' '}
+          <button
+            onClick={() => navigate('/register')}
+            className="text-yellow-400 hover:text-yellow-300 underline transition-colors"
+            disabled={isLoading}
+          >
+            Sign up
+          </button>
+        </div>
       </div>
     </div>
   );

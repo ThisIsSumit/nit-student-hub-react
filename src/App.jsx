@@ -28,7 +28,8 @@ function App() {
               <Route path="/hackathon" element={<PrivateRoute><HackathonTeamBuilder /></PrivateRoute>} />
               <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
             </Routes>
-          </div>
+
+          </div> */
           <Footer />
         </div>
       </Router>

@@ -16,7 +16,7 @@ import {
   Target,
   Award,
   Rocket,
-  Person,
+  User
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -176,11 +176,11 @@ function HackathonTeamBuilder() {
                {/* Name */}
             <div className="form-input space-y-2">
               <label className="flex items-center gap-2 text-white/90 font-medium">
-                <MapPin className="w-4 h-4 text-purple-400" />
+                <User className="w-4 h-4 text-purple-400" />
                 Name
               </label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/50" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/50" />
                 <input
                   type="text"
                   placeholder="Enter your name"
