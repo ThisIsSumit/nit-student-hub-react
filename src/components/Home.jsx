@@ -27,6 +27,7 @@ function Home() {
       }, 600 + index * 150);
     });
   }, []);
+  
 
   const cards = [
     {
